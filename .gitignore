@@ -1,0 +1,3 @@
+node_modules
+emls/*.eml
+scripts/input.json
