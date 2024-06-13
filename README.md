@@ -16,7 +16,7 @@ Clone the repo and install all dependencies.
   yarn
 ```
 
-### circuits
+### Circuits
 
 #### zk-regex
 
@@ -36,7 +36,7 @@ You could get the ptau file at <https://storage.googleapis.com/zkevm/ptau/powers
 **Note**:
 If you want to get the other ptau files with different pot directly, check the table in [guide of snarkjs](https://github.com/iden3/snarkjs?tab=readme-ov-file#guide).
 
-### compile
+### Compile
 
 Use circom to compile your circuit.
 
@@ -55,15 +55,15 @@ Use circom to compile your circuit.
   yarn run compile
 ```
 
-### input
+### Input
 
-You need the original email to generate the input file. please put the file at `emls/twitter.eml`. Then run:
+You need the original email to generate the input file. Please put the file at `emls/twitter.eml`. Then run:
 
 ```
   yarn run input
 ```
 
-### witness
+### Witness
 
 Generate the witness:
 
@@ -83,7 +83,7 @@ If you meet error here, check if all the files specified as input in the command
   yarn run wtns
 ```
 
-### setup
+### Setup
 
 You can run:
 
@@ -141,13 +141,13 @@ Generate the proof with `twitter_final.zkey` and `twitter.wtns`:
 
 Then, you'll get `proof.json` and `public.json`.
 
-### verify proof
+### Verify proof
 
 ```
   snarkjs groth16 verify proof/verification_key.json proof/public.json proof/proof.json
 ```
 
-### contract verifier
+### Contract Verifier
 
 Turn verifier into a smart contract:
 
