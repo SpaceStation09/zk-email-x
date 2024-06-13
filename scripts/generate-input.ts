@@ -20,7 +20,6 @@ async function generateTwitterVerifierCircuitInputs() {
 
   // Char array to Uint8Array
   const bodyRemaining = emailVerifierInputs.emailBody!.map((c) => Number(c)); 
-  console.log(Buffer.from(bodyRemaining).toString());
   const selectorBuffer = Buffer.from(STRING_PRESELECTOR);
   const usernameIndex = Buffer.from(bodyRemaining).indexOf(selectorBuffer) + selectorBuffer.length;
 

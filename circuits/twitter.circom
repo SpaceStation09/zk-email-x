@@ -49,7 +49,7 @@ template TwitterVerifier(maxHeaderLength, maxBodyLength, n, k, exposeFrom) {
   pubkeyHash <== EV.pubkeyHash;
 
   // 0 for false; non-zero for true
-  if(exposeFrom) {}
+  // if(exposeFrom) {}
 
   //This computes the regex states on each character in the email body. 
   //This is the part you need to customize for other app verification. (using zk-regex)
@@ -64,4 +64,4 @@ template TwitterVerifier(maxHeaderLength, maxBodyLength, n, k, exposeFrom) {
 
 }
 
-commitment main { public [ address ] } = TwitterVerifier(1024, 1536, 121, 17, 0);
+component main { public [ address ] } = TwitterVerifier(1024, 1536, 121, 17, 0);

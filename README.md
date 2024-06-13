@@ -41,7 +41,7 @@ If you want to get the other ptau files with different pot directly, check the t
 Use circom to compile your circuit.
 
 ```
-  circom -l node_modules circuits/twitter.circom -o ./build --r1cs --wasm --sym --c
+  circom -l node_modules circuits/main.circom -o build --r1cs --wasm --sym --c
 ```
 
 - `-l`: specify the directory where the directive `include` should look for the circuits indicated.
@@ -57,7 +57,7 @@ Use circom to compile your circuit.
 
 ### input
 
-You need the original email to generate the input file. please put the file at `script/emls/twitter.eml`. Then run:
+You need the original email to generate the input file. please put the file at `emls/twitter.eml`. Then run:
 
 ```
   yarn run input
@@ -65,13 +65,23 @@ You need the original email to generate the input file. please put the file at `
 
 ### witness
 
-Generate the input:
+Generate the witness:
 
 ```
-  yarn run witness
+  node build/twitter_js/generate_witness.js build/twitter_js/twitter.wasm scripts/input.json proof/witness.wtns 
 ```
 
-If you meet error here, check if all the file specified in the command `witness` (in package.json) is generated.
+If you meet error here, check if all the files specified as input in the command are generated, i.e.:
+
+- `build/twitter_js/generate_witness.js` generated during compile progress
+- `build/twitter_js/twitter.wasm` generated during compile progress
+- `scripts/input.json` generated with `scripts/generate-input.ts`
+
+**Fast path**:
+
+```
+  yarn run wtns
+```
 
 ### setup
 
@@ -84,18 +94,44 @@ You can run:
 which equals
 
 ```
-  snarkjs groth16 setup build/twitter.r1cs pot22_final.ptau proof/twitter_0000.zkey
+  snarkjs groth16 setup build/twitter.r1cs circuits/powersOfTau28_hez_final_22.ptau proof/twitter_0000.zkey
 ```
 
 This generates the reference `zkey` without phase 2 contributions.
 
+`zkey` is a zero-knowledge key  that includes both the **proving key** and **verification key** as well as phase 2 contributions.
+
 **IMPORTANT**: Do not use this `zkey` in production, as it's not safe. It requires at least a contribution,
 
-In this project, I contributed twice and used a random beacon.
+#### Contribute to Phase 2 ceremony
+
+1. First contribution to phase 2 ceremony.
+
+```
+  snarkjs zkey contribute proof/twitter_0000.zkey proof/twitter_0001.zkey --name="1st Contributor Name" -v
+```
+
+creates a zkey file with a new contribution.
+
+2. Second contribution to phase 2 ceremony.
+
+```
+  snarkjs zkey contribute proof/twitter_0001.zkey proof/twitter_final.zkey --name="2nd Contributor Name" -v
+```
+
+#### Export Verification Key
+
+In this project, I contributed twice.
 
 Run `yarn run export-vk` to export the verification key.
 
-### proof
+which equals
+
+```
+  snarkjs zkey export verificationkey proof/twitter_final.zkey proof/verification_key.json
+```
+
+### Proof
 
 Generate the proof with `twitter_final.zkey` and `twitter.wtns`:
 
@@ -116,7 +152,7 @@ Then, you'll get `proof.json` and `public.json`.
 Turn verifier into a smart contract:
 
 ```
-  snarkjs zkey export solidityverifier proof/twitter_final.zkey contracts/twitterVerifier.sol
+  snarkjs zkey export solidityverifier proof/twitter_final.zkey contracts/TwitterVerifier.sol
 ```
 
 Get the simulation verification call to verifier contract:
@@ -125,40 +161,53 @@ Get the simulation verification call to verifier contract:
   snarkjs zkey export soliditycalldata proof/public.json proof/proof.json
 ```
 
+We use `soliditycalldata` to simulate a verification call, and copy and paste the result directly in the verifyProof field in the deployed smart contract in the remix environment.
+
 ## File Structure
 
 FYI.
 
 ```
+├── README.md
 ├── build
 │   ├── twitter.r1cs
 │   ├── twitter.sym
 │   ├── twitter_cpp
+│   │   ├── Makefile
+│   │   ├── calcwit.cpp
+│   │   ├── calcwit.hpp
+│   │   ├── circom.hpp
+│   │   ├── fr.asm
+│   │   ├── fr.cpp
+│   │   ├── fr.hpp
+│   │   ├── main.cpp
+│   │   ├── twitter.cpp
+│   │   └── twitter.dat
 │   └── twitter_js
 │       ├── generate_witness.js
 │       ├── twitter.wasm
 │       └── witness_calculator.js
 ├── circuits
-│   ├── input
-│   │   └── twitter.json
 │   ├── twitter.circom
 │   └── twitter_regex.circom
 ├── contracts
-│   └── twitterVerifier.sol
-├── pot22_final.ptau
+│   └── TwitterVerifier.sol
+├── emls
+│   └── twitter.eml
+├── package.json
+├── powersOfTau28_hez_final_22.ptau
 ├── proof
 │   ├── proof.json
 │   ├── public.json
-│   ├── twitter.wtns
 │   ├── twitter_0000.zkey
 │   ├── twitter_0001.zkey
-│   ├── twitter_0002.zkey
 │   ├── twitter_final.zkey
-│   └── verification_key.json
-└── scripts
-    ├── emls
-    │   └── twitter.eml
-    └── generate-input.ts
+│   ├── verification_key.json
+│   └── witness.wtns
+├── scripts
+│   ├── generate-input.ts
+│   └── input.json
+└── yarn.lock
 ```
 
 ## Acknowledgement
