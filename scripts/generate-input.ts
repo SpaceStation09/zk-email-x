@@ -5,7 +5,7 @@ import path from "path";
 export const STRING_PRESELECTOR = "email was meant for @";
 export const MAX_HEADER_PADDED_BYTES = 1024;
 export const MAX_BODY_PADDED_BYTES = 1536;
-export const ethereumAddress = "0x71C7656EC7ab88b098defB751B7401B5f6d897";
+export const ethereumAddress = "0x8cAb42EF3c96Ca59f5C52E687197d9e54161831A";
 
 async function generateTwitterVerifierCircuitInputs() {
   const rawEmail = fs.readFileSync(
