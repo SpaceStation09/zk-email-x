@@ -5,3 +5,6 @@ proof/*.wtns
 proof/*.zkey
 *.ptau
 build
+artifacts
+cache
+types

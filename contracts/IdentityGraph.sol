@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.26;
+pragma solidity ^0.8.20;
 
 import "./TwitterVerifier.sol";
 import "@zk-email/contracts/DKIMRegistry.sol";
@@ -12,7 +12,7 @@ contract IdentityGraph {
         string userID;
     }
 
-    bytes public avatar;
+    // bytes public avatar;
     uint8 public constant pubkeyHashIndexInSignals = 0;
     uint8 public constant usernameIndexInSignals = 1;
     uint8 public constant addressIndexInSignals = 2; 
@@ -25,13 +25,13 @@ contract IdentityGraph {
     DKIMRegistry dkimRegistry;
     Groth16Verifier public immutable verifier;
 
-    error AddressMismatch(address _committedAddr, address _msgSender);
-    error InvalidDKIMSignature(string _domain, bytes32 _pubkeyHashInCircuit);
+    // error AddressMismatch(address _committedAddr, address _msgSender);
+    // error InvalidDKIMSignature(string _domain, bytes32 _pubkeyHashInCircuit);
 
-    event IdentityBinding(bytes32 indexed identityHash, string indexed domain, string userId);
+    event IdentityBinding(bytes32 indexed identityHash, string domain, string userId);
 
-    constructor(bytes memory _avatar, Groth16Verifier _v, DKIMRegistry _d){
-        avatar = _avatar;
+    constructor(Groth16Verifier _v, DKIMRegistry _d){
+        // avatar = _avatar;
         dkimRegistry = _d;
         verifier = _v;
     }
@@ -54,7 +54,7 @@ contract IdentityGraph {
         // require(committedAddr == msg.sender, AddressMismatch(committedAddr, msg.sender));
 
         bytes32 dkimPublickeyHashInCircuit = bytes32(_signals[pubkeyHashIndexInSignals]);
-        require(dkimRegistry.isDKIMPublicKeyHashValid(_domain, dkimPublickeyHashInCircuit), InvalidDKIMSignature(_domain, dkimPublickeyHashInCircuit));
+        require(dkimRegistry.isDKIMPublicKeyHashValid(_domain, dkimPublickeyHashInCircuit), "Invalid DKIM Signature");
 
         // Verify RSA and proof
         require(
