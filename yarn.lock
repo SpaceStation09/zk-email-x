@@ -967,6 +967,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/snarkjs@^0.7.8":
+  version "0.7.8"
+  resolved "https://registry.yarnpkg.com/@types/snarkjs/-/snarkjs-0.7.8.tgz#8fd47457247efd4a6dabcdd71ec1986532155480"
+  integrity sha512-x37Jsv1vx6I6RMJdfvYEmDUOLYgzYMecwlk13gniDOcN20xLVe9hy9DlQxWeCPirqpDY/jwugQSqCi2RxehU3g==
+
 "@zk-email/circuits@^6.1.1":
   version "6.1.1"
   resolved "https://registry.npmjs.org/@zk-email/circuits/-/circuits-6.1.1.tgz"
@@ -3714,7 +3719,7 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
-snarkjs@^0.7.0:
+snarkjs@^0.7.0, snarkjs@^0.7.4:
   version "0.7.4"
   resolved "https://registry.npmjs.org/snarkjs/-/snarkjs-0.7.4.tgz"
   integrity sha512-x4cOCR4YXSyBlLtfnUUwfbZrw8wFd/Y0lk83eexJzKwZB8ELdpH+10ts8YtDsm2/a3WK7c7p514bbE8NpqxW8w==
