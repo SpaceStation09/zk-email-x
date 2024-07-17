@@ -1,6 +1,6 @@
 node_modules
 emls/*.eml
-scripts/input.json
+scripts/*.json
 proof/*.wtns
 proof/*.zkey
 *.ptau
