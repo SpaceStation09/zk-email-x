@@ -9,12 +9,12 @@ clean: contract_clean
   rm -r ./build
 
 default := './emls/twitter.eml'
-
 generate_input eml_file=default:
   echo 'Generate input from {{eml_file}}'
   ts-node scripts/generate-input.ts {{eml_file}}
 
 build_circuit:
+  # Est. ~1min 
   mkdir build
   yarn run compile
   ls -lh ./build
@@ -32,13 +32,12 @@ generate_witness:
 snarkjs_setup: ptau_download
   # Need extra node option to increase memory limit.
   # Check problem detail at: https://github.com/iden3/snarkjs/issues/397
-  NODE_OPTIONS="--max-old-space-size=655300" snarkjs groth16 setup build/twitter.r1cs ./pot22.ptau proof/twitter_0000.zkey | gnomon
+  NODE_OPTIONS="--max-old-space-size=655300" snarkjs groth16 setup build/twitter.r1cs ./pot22.ptau proof/twitter_0000.zkey
 
   # You need to enter a random text to provide extra source of entropy
-  yarn run snarkjs zkey contribute proof/twitter_0000.zkey proof/twitter_0001.zkey --name="1st Contributor Name" -v
-  yarn run snarkjs zkey contribute proof/twitter_0001.zkey proof/twitter_final.zkey --name="2nd Contributor Name" -v
+  NODE_OPTIONS="--max-old-space-size=655300" yarn run snarkjs zkey contribute proof/twitter_0000.zkey proof/twitter_final.zkey --name="1st Contributor Name" -v
   # Export the vk
-  yarn run snarkjs zkey export verificationkey proof/twitter_final.zkey proof/verification_key.json
+  NODE_OPTIONS="--max-old-space-size=655300" yarn run snarkjs zkey export verificationkey proof/twitter_final.zkey proof/verification_key.json
 
 generate_proof:
 	# Proof and public signal generated in ./proof
@@ -54,3 +53,9 @@ generate_contract_verifier:
 	yarn run snarkjs zkey export solidityverifier proof/twitter_final.zkey contracts/TwitterVerifier.sol
 	# Generate a verification call data to contract verifier
 	ts-node scripts/generate-calldata.ts
+
+contract_test: 
+  [ -f ./scripts/input.json ] || just generate_input
+  [ -f proof/twitter_final.zkey ] || just snarkjs_setup
+  # Est. 1min
+  yarn run hardhat:test

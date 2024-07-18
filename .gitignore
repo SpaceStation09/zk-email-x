@@ -1,8 +1,7 @@
 node_modules
 emls/*.eml
 scripts/*.json
-proof/*.wtns
-proof/*.zkey
+proof/
 *.ptau
 build
 artifacts
