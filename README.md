@@ -190,6 +190,18 @@ Get the simulation verification call to verifier contract:
 
 We use `soliditycalldata` to simulate a verification call, and copy and paste the result directly in the verifyProof field in the deployed smart contract in the remix environment.
 
+### Rapidsnark
+
+[`Rapidsnark`](https://github.com/iden3/rapidsnark) is a fast zkSNARK prover written in C++, that generates proofs for circuits created with circom and snarkjs. We could use `Rapidsnark` as an alternative to `snarkjs`.
+
+### How to use in this project
+
+1. Clone the `Rapidsnark` repo.
+2. Follow the instructions in the guidance of `rapidsnark` to build `prover` & `verifier`.
+3. The built prover is in the dir `package_***/bin`.
+4. Copy the prover and paste it into this project.
+5. You can now generate the proof with `<YOUR-PATH>/prover <circuit.zkey> <witness.wtns> <proof.json> <public.json>`
+
 ## File Structure
 
 FYI.
